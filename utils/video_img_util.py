@@ -12,7 +12,9 @@ def download_video(vid_id, outputDir='/tmp'):
 	outputLoc = outputDir + "/" + vid_id + ".mp4"
 	if os.path.isfile(outputLoc):
 		os.remove(outputLoc)
-	yt = YouTube("http://www.youtube.com/watch?v=%s" % vid_id)
+	url = "http://www.youtube.com/watch?v=%s" % (vid_id)
+	print url
+	yt = YouTube(url)
 	yt.set_filename(vid_id)
 	video = yt.get('mp4', '360p')
 	video.download(outputDir)
@@ -23,7 +25,7 @@ def download_video(vid_id, outputDir='/tmp'):
 def get_image_at_time(vid, time, time_unit="s"):
 	# note, each second is 30 frame, +15 means +0.5s
 	# print time, time * 30 + 15
-	image = vid.get_data(time * 30 + 15) 
+	image = vid.get_data(int(time * 29.97) + 15) 
 	return image 
 
 def show_image(image):

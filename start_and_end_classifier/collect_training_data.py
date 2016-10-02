@@ -1,3 +1,7 @@
+'''
+python collect_training_data.py ../data/start_and_end/raw3.csv ../dataset_generated/
+'''
+
 import logging 
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 import sys
