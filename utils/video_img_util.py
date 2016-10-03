@@ -13,7 +13,7 @@ def download_video(vid_id, outputDir='/tmp'):
 	if os.path.isfile(outputLoc):
 		os.remove(outputLoc)
 	url = "http://www.youtube.com/watch?v=%s" % (vid_id)
-	print url
+	# logging.debug(url)
 	yt = YouTube(url)
 	yt.set_filename(vid_id)
 	video = yt.get('mp4', '360p')
