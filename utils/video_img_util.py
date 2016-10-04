@@ -38,8 +38,11 @@ def save_image(image, fileName='temp', outputDir='/tmp', removeIfExist=True):
 	outputLoc = outputDir + "/" + fileName + ".png"
 	if removeIfExist and os.path.isfile(outputLoc):
 		os.remove(outputLoc)
-	plt.imshow(image)
-	plt.savefig(outputLoc)
+	imageio.imwrite(outputLoc, image)
+
+# def read_image(imageDir):
+
+
 
 # vid, vid_loc = download_video("imGtJeEG6cc")
 # show_image(get_image_at_time(vid, 4))
