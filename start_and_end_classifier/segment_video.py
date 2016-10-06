@@ -1,12 +1,13 @@
 '''
-python pred_video.py models/start_detector.oct_4.xgb drBfsroVfeo
+python segment_video.py models/start_detector.oct_4.xgb models/end_detector.oct_5.xgb drBfsroVfeo
 '''
 import logging 
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 import sys
 sys.path.append("../utils/")
 startModelFile = sys.argv[1]
-vid_id = sys.argv[2]
+endModelFile = sys.argv[2]
+vid_id = sys.argv[3]
 from video_img_util import get_numpy_frames_for_video, load_image_from_array
 import os
 import numpy as np 
