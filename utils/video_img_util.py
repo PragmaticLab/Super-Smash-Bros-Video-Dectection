@@ -69,7 +69,8 @@ def load_image_from_array(image_arr, img_width=32):
 	image = Image.fromarray(image_arr)
 	return image
 
-# vid, vid_loc = download_video("drBfsroVfeo")
+# vid, vid_loc = download_video("KyAnueF9XNU")
+# plt.imshow(vid.get_data(int(943 * 29.8703804348) + 15))
 # show_image(get_image_at_time(vid, 4))
 # show_image(get_image_at_time(vid, 31))
 # save_image(get_image_at_time(vid, 4))
