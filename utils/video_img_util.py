@@ -5,30 +5,40 @@ from pytube import YouTube
 import pylab
 import numpy as np 
 import matplotlib.pyplot as plt
-import imageio
+import cv2
 from PIL import Image
+
+'''
+opencv doc: http://docs.opencv.org/3.0-beta/modules/videoio/doc/reading_and_writing_video.html#cv2.VideoCapture.get
+'''
+
+# returns time in s
+def get_vid_length(vid):
+	return vid.get(7) / vid.get(5)
 
 def download_video(vid_id, outputDir='/tmp'):
 	if outputDir[-1] == '/':
 		outputDir = outputDir[:-1] # removes / from dir
 	outputLoc = outputDir + "/" + vid_id + ".mp4"
-	if os.path.isfile(outputLoc):
-		os.remove(outputLoc)
-	url = "http://www.youtube.com/watch?v=%s" % (vid_id)
-	# logging.debug(url)
-	yt = YouTube(url)
-	yt.set_filename(vid_id)
-	video = yt.get('mp4', '360p')
-	video.download(outputDir)
+	if not os.path.isfile(outputLoc):
+		url = "http://www.youtube.com/watch?v=%s" % (vid_id)
+		# logging.debug(url)
+		yt = YouTube(url)
+		yt.set_filename(vid_id)
+		video = yt.get('mp4', '360p')
+		video.download(outputDir)
 	logging.info("Loading video %s" % (vid_id))
-	vid = imageio.get_reader(outputLoc, 'ffmpeg')
-	return vid, outputLoc
+	vidcap = cv2.VideoCapture(outputLoc)
+	return vidcap, outputLoc
 
-def get_image_at_time(vid, time, time_unit="s", mult=29.97):
-	# note, each second is 30 frame, +15 means +0.5s
-	# print time, time * 30 + 15
-	image = vid.get_data(int(time * mult) + 15) 
-	return image 
+def get_image_at_time(vidcap, time, time_unit="s"):
+	time += 0.5 
+	vidcap.set(cv2.cv.CV_CAP_PROP_POS_MSEC,1000 * time)
+	success, image = vidcap.read()
+	if not success:
+		raise Exception("NOOOO")
+	else:
+		return image
 
 def show_image(image):
 	plt.imshow(image)
@@ -54,8 +64,8 @@ def read_image(imageDir, img_width=32, formatted=True):
 def get_numpy_frames_for_video(vid_id, img_width=32):
 	vid, outputLoc = download_video(vid_id)
 	image_list = []
-	for i in range(0, vid.get_length(), 10):
-		image = vid.get_data(i)
+	for i in range(0, int(get_vid_length(vid)), 1):
+		image = get_image_at_time(vid, i)
 		image = Image.fromarray(image)
 		image = image.resize((img_width,img_width), Image.BILINEAR)
 		image = np.array(image)
@@ -70,9 +80,8 @@ def load_image_from_array(image_arr, img_width=32):
 	return image
 
 # vid, vid_loc = download_video("KyAnueF9XNU")
-# plt.imshow(vid.get_data(int(943 * 29.8703804348) + 15))
 # show_image(get_image_at_time(vid, 4))
 # show_image(get_image_at_time(vid, 31))
 # save_image(get_image_at_time(vid, 4))
 
-# vid = get_numpy_frames_for_video("drBfsroVfeo")
+# vid = get_numpy_frames_for_video("KyAnueF9XNU")
